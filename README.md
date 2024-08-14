@@ -1,6 +1,6 @@
 <img src="appendix/icon.webp" width="100" height="auto">
 
-# Distribution Fitting Tool
+# Data Distribution Fitting
 
 This tool allows you select data and check its distribution. The tool fits the selected data against various probability distributions and identifies the best-fitting ones. Additionally, it provides a visual comparison between the actual data distribution and the fitted distributions, including the normal distribution.
 
