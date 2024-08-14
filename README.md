@@ -1,3 +1,5 @@
+<img src="appendix/icon.webp" width="100" height="auto">
+
 # Distribution Fitting Tool
 
 This tool allows you select data and check its distribution. The tool fits the selected data against various probability distributions and identifies the best-fitting ones. Additionally, it provides a visual comparison between the actual data distribution and the fitted distributions, including the normal distribution.
@@ -12,11 +14,8 @@ This tool allows you select data and check its distribution. The tool fits the s
 - **Visualizations:** Generates clear and detailed plots showing the actual data distribution overlaid with the fitted distribution lines.
 - **Disclaimer:** Informs the user that a significant p-value (below 0.05) indicates that the distribution does not conform well to the actual data distribution.
 
-## Getting Started
-
-### Prerequisites
-
-Make sure you have Python installed. You can install the required Python libraries using the `requirements.txt` file provided.
+<img src="appendix/example_1.png" width="600" height="auto">
+<img src="appendix/example_2.png" width="600" height="auto">
 
 ```bash
 pip install -r requirements.txt
