@@ -4,6 +4,8 @@
 
 This tool allows you select data and check its distribution. The tool fits the selected data against various probability distributions and identifies the best-fitting ones. Additionally, it provides a visual comparison between the actual data distribution and the fitted distributions, including the normal distribution.
 
+[App]([https://huggingface.co/spaces/reab5555/Multiple-Speakers-Personality-Analyzer](https://huggingface.co/spaces/reab5555/Data-Distribution-Fit))
+
 ## Features
 
 - **Upload CSV Files:** Easily upload your dataset in CSV format.
