@@ -12,9 +12,8 @@ import tempfile
 # Suppress specific runtime warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
-
 # Function to check distribution type
-def check_distribution(target_column):
+def check_distribution(target_column, show_histogram):
     data = target_column.dropna()
 
     # Distribution dictionaries
@@ -69,10 +68,11 @@ def check_distribution(target_column):
     # Create a single plot for all distributions
     plt.figure(figsize=(12, 8), dpi=400)
 
-    # Plot the original data distribution as a histogram
-    sns.histplot(data, kde=False, stat="density", bins=50, color=actual_data_color, label='Actual Data Distribution')
+    # Plot the original data distribution as a histogram if show_histogram is True
+    if show_histogram:
+        sns.histplot(data, kde=False, stat="density", bins=50, color=actual_data_color, label='Actual Data Distribution')
 
-    # Overlay the actual data KDE line
+    # Always plot the KDE line
     sns.kdeplot(data, color=actual_data_color, lw=2, label='Actual Data Distribution Line')
 
     # Overlay the top 3 best fit distributions
@@ -110,7 +110,8 @@ def check_distribution(target_column):
     p_value_text = "<0.001" if normal_p_value < 0.001 else f"{normal_p_value:.5f}"
 
     plt.figure(figsize=(12, 8), dpi=400)
-    sns.histplot(data, kde=False, stat="density", bins=50, color=actual_data_color, label='Actual Data Distribution')
+    if show_histogram:
+        sns.histplot(data, kde=False, stat="density", bins=50, color=actual_data_color, label='Actual Data Distribution')
     sns.kdeplot(data, color=actual_data_color, lw=2, label='Actual Data Distribution Line')
     plt.plot(normal_best_fit_data, normal_pdf, color=normal_color, lw=2, label=f'Normal Fit (p-value={p_value_text})')
     plt.title("Comparison with Normal Distribution")
@@ -125,19 +126,16 @@ def check_distribution(target_column):
 
     return result_text, best_fit_plot, normal_comparison_plot
 
-
 # Function to load the CSV file and extract numeric column names
 def load_file(file):
     df = pd.read_csv(file.name)
     numeric_columns = df.select_dtypes(include=[np.number]).columns.tolist()
     return gr.update(choices=numeric_columns), df
 
-
 # Function to analyze the selected column
-def analyze_column(selected_column, df):
-    result_text, best_fit_plot, normal_comparison_plot = check_distribution(df[selected_column])
+def analyze_column(selected_column, df, show_histogram):
+    result_text, best_fit_plot, normal_comparison_plot = check_distribution(df[selected_column], show_histogram)
     return result_text, best_fit_plot, normal_comparison_plot
-
 
 # Define the Gradio app layout
 with gr.Blocks() as demo:
@@ -145,6 +143,7 @@ with gr.Blocks() as demo:
 
     file_input = gr.File(label="Upload CSV File")
     column_selector = gr.Dropdown(label="Select Target Column", choices=[])
+    show_histogram = gr.Checkbox(label="Show Bars", value=True)
     analyze_button = gr.Button("Fit")
     output_text = gr.Textbox(label="Results")
     best_fit_plot_output = gr.Image(label="Best Fit Distributions")
@@ -157,7 +156,7 @@ with gr.Blocks() as demo:
     file_input.upload(load_file, inputs=file_input, outputs=[column_selector, df_state])
 
     # Perform analysis on the selected column
-    analyze_button.click(analyze_column, inputs=[column_selector, df_state],
+    analyze_button.click(analyze_column, inputs=[column_selector, df_state, show_histogram],
                          outputs=[output_text, best_fit_plot_output, normal_comparison_output])
 
 demo.launch()
