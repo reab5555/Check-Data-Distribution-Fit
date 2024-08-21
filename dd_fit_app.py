@@ -70,7 +70,7 @@ def check_distribution(target_column):
     plt.figure(figsize=(12, 8), dpi=400)
 
     # Plot the original data distribution as a histogram
-    sns.histplot(data, kde=False, stat="density", bins=30, color=actual_data_color, label='Actual Data Distribution')
+    sns.histplot(data, kde=False, stat="density", bins=50, color=actual_data_color, label='Actual Data Distribution')
 
     # Overlay the actual data KDE line
     sns.kdeplot(data, color=actual_data_color, lw=2, label='Actual Data Distribution Line')
@@ -79,7 +79,7 @@ def check_distribution(target_column):
     for i, (name, p_value, params) in enumerate(top_3_results):
         best_fit_data = np.linspace(min(data), max(data), 1000)
         pdf = distributions[name].pdf(best_fit_data, *params)
-        p_value_text = "<0.0001" if p_value < 0.0001 else f"{p_value:.12f}"
+        p_value_text = "<0.001" if p_value < 0.001 else f"{p_value:.5f}"
         plt.plot(best_fit_data, pdf, color=distribution_colors[i], lw=2, label=f'{name} Fit (p-value={p_value_text})')
 
     plt.title("Top 3 Best Fit Distributions Overlaid")
@@ -95,7 +95,7 @@ def check_distribution(target_column):
     # Prepare result text with top 3 distributions and p-values
     result_text = "Top 3 best matched distributions:\n"
     for i, (name, p_value, _) in enumerate(top_3_results):
-        p_value_text = "<0.0001" if p_value < 0.0001 else f"{p_value:.12f}"
+        p_value_text = "<0.001" if p_value < 0.001 else f"{p_value:.5f}"
         result_text += f"Top {i + 1}: {name} with a p-value of {p_value_text}\n"
 
     # Add disclaimer about p-value significance
@@ -107,10 +107,10 @@ def check_distribution(target_column):
     normal_pdf = norm.pdf(normal_best_fit_data, mean, std)
     ks_stat, normal_p_value = kstest(data, 'norm', args=(mean, std))
 
-    p_value_text = "<0.0001" if normal_p_value < 0.0001 else f"{normal_p_value:.12f}"
+    p_value_text = "<0.001" if normal_p_value < 0.001 else f"{normal_p_value:.5f}"
 
     plt.figure(figsize=(12, 8), dpi=400)
-    sns.histplot(data, kde=False, stat="density", bins=30, color=actual_data_color, label='Actual Data Distribution')
+    sns.histplot(data, kde=False, stat="density", bins=50, color=actual_data_color, label='Actual Data Distribution')
     sns.kdeplot(data, color=actual_data_color, lw=2, label='Actual Data Distribution Line')
     plt.plot(normal_best_fit_data, normal_pdf, color=normal_color, lw=2, label=f'Normal Fit (p-value={p_value_text})')
     plt.title("Comparison with Normal Distribution")
@@ -141,7 +141,7 @@ def analyze_column(selected_column, df):
 
 # Define the Gradio app layout
 with gr.Blocks() as demo:
-    gr.Markdown("# Distribution Fitting\n")
+    gr.Markdown("# Data Distribution Fit\n")
 
     file_input = gr.File(label="Upload CSV File")
     column_selector = gr.Dropdown(label="Select Target Column", choices=[])
